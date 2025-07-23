@@ -1,1 +1,1 @@
-http://boxstarter.org/package/url?https://raw.githubusercontent.com/LumiQAJamie/LumiBoxStarter/main/boxstarter.ps1
+http://boxstarter.org/package/url?https://raw.githubusercontent.com/dannysatch/LumiBoxStarter/main/boxstarter.ps1
