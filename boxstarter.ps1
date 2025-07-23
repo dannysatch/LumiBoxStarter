@@ -20,7 +20,7 @@ New-Item -Path 'C:\ProgramData\Boxstarter\SetupFlags\' -ItemType Directory
 $zipUrl = "https://boxstarterlumi.blob.core.windows.net/installers/AGMCore.zip"
 $packageName = "lumi-agm-installer26"
 $libPath = "C:\ProgramData\chocolatey\lib\$packageName"
-$zipFilePath = "$libPath\mytools.zip"
+$zipFilePath = "$libPath\AGMCore.zip"
 
 ### Install Core
 
