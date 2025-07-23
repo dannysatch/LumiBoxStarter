@@ -1,3 +1,5 @@
+Import-Module "$env:ProgramData\Boxstarter\Boxstarter.Chocolatey\Boxstarter.Chocolatey.psd1"
+
 # Install Google Chrome
 choco install googlechrome -y
 
