@@ -40,6 +40,10 @@ Remove-Item $zipFilePath
 
 Write-Host "Files extracted to: $libPath"
 
+cd $libPath
+
+choco pack
+
 choco install lumi-agm-installer26 -s $libPath --force
 
 Write-Host "AGM Core Installed"
