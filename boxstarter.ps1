@@ -1,6 +1,6 @@
 
 # Install Google Chrome
-choco install googlechrome -y
+choco install firefox -y
 
 # Reboot the system
 Invoke-Reboot
