@@ -8,7 +8,7 @@
 # # After reboot, install VS Code
 # choco install vscode -y
 
-
+New-Item -Path 'C:\ProgramData\Boxstarter\SetupFlags\' -ItemType Directory
 $firefoxInstalled = Test-Path "C:\ProgramData\Boxstarter\SetupFlags\Firefox.txt"
 $vscodeInstalled  = Test-Path "C:\ProgramData\Boxstarter\SetupFlags\VSCode.txt"
 
