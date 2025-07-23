@@ -12,7 +12,7 @@ New-Item -Path 'C:\ProgramData\Boxstarter\SetupFlags\' -ItemType Directory
 $firefoxInstalled = Test-Path "C:\ProgramData\Boxstarter\SetupFlags\Firefox.txt"
 $vscodeInstalled  = Test-Path "C:\ProgramData\Boxstarter\SetupFlags\VSCode.txt"
 
-if (-not $firefoxInstalled) {
+if ($firefoxInstalled) {
     Write-Host "`n Installing Firefox..."
     choco install firefox -y
     New-Item -ItemType File -Path "C:\ProgramData\Boxstarter\SetupFlags\Firefox.txt" | Out-Null
@@ -21,7 +21,7 @@ if (-not $firefoxInstalled) {
     Invoke-Reboot
   }
 
-if (-not $vscodeInstalled) {
+if ($vscodeInstalled) {
       Write-Host "`n Installing VS Code..."
       choco install vscode -y
       New-Item -ItemType File -Path "C:\ProgramData\Boxstarter\SetupFlags\VSCode.txt" | Out-Null
