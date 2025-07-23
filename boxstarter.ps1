@@ -1,21 +1,21 @@
 New-Item -Path 'C:\ProgramData\Boxstarter\SetupFlags\' -ItemType Directory
-$firefoxInstalled = Test-Path "C:\ProgramData\Boxstarter\SetupFlags\Firefox.txt"
-$vscodeInstalled  = Test-Path "C:\ProgramData\Boxstarter\SetupFlags\VSCode.txt"
+# $firefoxInstalled = Test-Path "C:\ProgramData\Boxstarter\SetupFlags\Firefox.txt"
+# $vscodeInstalled  = Test-Path "C:\ProgramData\Boxstarter\SetupFlags\VSCode.txt"
 
-if (-not $firefoxInstalled) {
-    Write-Host "`n Installing Firefox..."
-    choco install firefox -y
-    New-Item -ItemType File -Path "C:\ProgramData\Boxstarter\SetupFlags\Firefox.txt" | Out-Null
+# if (-not $firefoxInstalled) {
+#     Write-Host "`n Installing Firefox..."
+#     choco install firefox -y
+#     New-Item -ItemType File -Path "C:\ProgramData\Boxstarter\SetupFlags\Firefox.txt" | Out-Null
 
-    Write-Host "`n Rebooting to continue setup..."
-    Invoke-Reboot
-  }
+#     Write-Host "`n Rebooting to continue setup..."
+#     Invoke-Reboot
+#   }
 
-if (-not $vscodeInstalled) {
-      Write-Host "`n Installing VS Code..."
-      choco install vscode -y
-      New-Item -ItemType File -Path "C:\ProgramData\Boxstarter\SetupFlags\VSCode.txt" | Out-Null
-  }
+# if (-not $vscodeInstalled) {
+#       Write-Host "`n Installing VS Code..."
+#       choco install vscode -y
+#       New-Item -ItemType File -Path "C:\ProgramData\Boxstarter\SetupFlags\VSCode.txt" | Out-Null
+#   }
 
 $zipUrl = "https://boxstarterlumi.blob.core.windows.net/installers/AGMCore.zip"
 $packageName = "lumi-agm-installer26"
@@ -40,7 +40,7 @@ Remove-Item $zipFilePath
 
 Write-Host "Files extracted to: $libPath"
 
-choco install lumi-agm-installer26 -s .
+choco install lumi-agm-installer26 -s . --force
 
 Write-Host "AGM Core Installed"
 
