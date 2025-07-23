@@ -4,7 +4,7 @@ choco install Boxstarter
 choco install googlechrome -y
 
 # Reboot the system
-Restart-ComputerAndContinue
+Invoke-Reboot
 
 # After reboot, install VS Code
 choco install vscode -y
