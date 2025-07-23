@@ -1,13 +1,3 @@
-
-# # Install Google Chrome
-# choco install firefox -y
-
-# # Reboot the system
-# Invoke-Reboot
-
-# # After reboot, install VS Code
-# choco install vscode -y
-
 New-Item -Path 'C:\ProgramData\Boxstarter\SetupFlags\' -ItemType Directory
 $firefoxInstalled = Test-Path "C:\ProgramData\Boxstarter\SetupFlags\Firefox.txt"
 $vscodeInstalled  = Test-Path "C:\ProgramData\Boxstarter\SetupFlags\VSCode.txt"
@@ -27,4 +17,31 @@ if (-not $vscodeInstalled) {
       New-Item -ItemType File -Path "C:\ProgramData\Boxstarter\SetupFlags\VSCode.txt" | Out-Null
   }
 
-    Write-Host "`n Setup complete!"
+$zipUrl = "https://boxstarterlumi.blob.core.windows.net/installers/AGMCore.zip"
+$packageName = "lumi-agm-installer26"
+$libPath = "C:\ProgramData\chocolatey\lib\$packageName"
+$zipFilePath = "$libPath\mytools.zip"
+
+### Install Core
+
+# Ensure the lib folder exists
+if (-not (Test-Path $libPath)) {
+    New-Item -ItemType Directory -Path $libPath -Force | Out-Null
+}
+
+# Download the ZIP file
+Invoke-WebRequest -Uri $zipUrl -OutFile $zipFilePath
+
+# Unzip contents
+Expand-Archive -LiteralPath $zipFilePath -DestinationPath $libPath -Force
+
+# Optionally delete the ZIP after extraction
+Remove-Item $zipFilePath
+
+Write-Host "Files extracted to: $libPath"
+
+choco install lumi-agm-installer26 -s .
+
+Write-Host "AGM Core Installed"
+
+Write-Host "`n Setup complete!"
