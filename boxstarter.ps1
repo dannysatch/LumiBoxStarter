@@ -1,4 +1,3 @@
-choco install Boxstarter
 
 # Install Google Chrome
 choco install googlechrome -y
