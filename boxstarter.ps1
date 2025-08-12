@@ -44,7 +44,7 @@ cd $libPath
 
 choco pack
 
-choco install $packageName -s $libPath --force
+choco install "${packageName}.nupkg"  -s $libPath --force
 
 Write-Host "AGM Core Installed"
 
