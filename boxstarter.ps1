@@ -44,7 +44,7 @@ cd $libPath
 
 # choco pack
 
-choco install "${packageName}.nupkg"  -s $libPath --force
+choco install lumiagm --version="26.0.0.2" --source="C:\ProgramData\chocolatey\lib\lumiagm.26.0.0.2" --force
 
 Write-Host "AGM Core Installed"
 
