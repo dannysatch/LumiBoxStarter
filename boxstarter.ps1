@@ -18,7 +18,7 @@ New-Item -Path 'C:\ProgramData\Boxstarter\SetupFlags\' -ItemType Directory
 #   }
 
 $zipUrl = "https://boxstarterlumi.blob.core.windows.net/installers/AGMCore.zip"
-$packageName = "lumiagm.26.0.0.2"
+$packageName = "lumi-agm-installer26"
 $libPath = "C:\temp\$packageName"
 $zipFilePath = "$libPath\AGMCore.zip"
 
@@ -44,7 +44,7 @@ cd $libPath
 
 choco pack
 
-choco install lumiagm
+choco install lumi-agm-installer26
 
 Write-Host "AGM Core Installed"
 
