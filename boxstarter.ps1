@@ -42,10 +42,13 @@ Write-Host "Files extracted to: $libPath"
 
 cd $libPath
 
-# choco pack
+choco pack
 
-choco install lumiagm --version="26.0.0.2" --source="C:\temp\lumiagm.26.0.0.2" --force
+choco install lumiagm
 
 Write-Host "AGM Core Installed"
 
 Write-Host "`n Setup complete!"
+
+$ErrorActionPreference = 'Stop'
+
