@@ -42,7 +42,7 @@ Write-Host "Files extracted to: $libPath"
 
 cd $libPath
 
-choco pack
+# choco pack
 
 choco install "${packageName}.nupkg"  -s $libPath --force
 
