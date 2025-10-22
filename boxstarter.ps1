@@ -8,7 +8,7 @@ $Script2Flag = Join-Path $workDir "Script2.flag"
 $Script3Flag = Join-Path $workDir "Script3.flag"
 $SQLFlag =  Join-Path $workDir "SQL.flag"
 $Script4Flag = Join-Path $workDir "Script4.flag"
-$Script5Flag = Join-Path $workDir "Script5.flag"
+$OfficeFlag = Join-Path $workDir "Office.flag"
 
 ### Install Core
 
@@ -92,10 +92,10 @@ if (-not (Test-Path $Script4Flag)) {
 
 }
 
-if (-not (Test-Path $Script5Flag)) {
+if (-not (Test-Path $OfficeFlag)) {
     
-    Start-Process "powershell.exe" -ArgumentList "-ExecutionPolicy Bypass -NoProfile -File `"$workDir\5_LumiComputerSetup-InstallOffice.ps1`"" -Verb RunAs -Wait
-    New-Item -ItemType File -Path "$workDir\Script5.flag" | Out-Null
+    choco install office365business
+    New-Item -ItemType File -Path "$workDir\Office.flag" | Out-Null
 
 }
 
