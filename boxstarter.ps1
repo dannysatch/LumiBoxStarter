@@ -5,6 +5,7 @@ $zipFilePath = Join-Path $workDir "boxstarter.zip"
 $DownloadFlag = Join-Path $workDir "Download.flag"
 $Script0Flag = Join-Path $workDir "Script0.flag"
 $Script2Flag = Join-Path $workDir "Script2.flag"
+$Script3Flag = Join-Path $workDir "Script3.flag"
 
 ### Install Core
 
@@ -60,7 +61,24 @@ if (-not (Test-Path $Script0Flag)) {
 
 
 # Script 3
-Start-Process "powershell.exe" -ArgumentList "-ExecutionPolicy Bypass -NoProfile -File `"$workDir\3_LumiComputerSetup-AfterInstallingOS.ps1`"" -Verb RunAs -Wait
+if (-not (Test-Path $Script3Flag)) {
+    
+    Start-Process "powershell.exe" -ArgumentList "-ExecutionPolicy Bypass -NoProfile -File `"$workDir\3_LumiComputerSetup-AfterInstallingOS.ps1`"" -Verb RunAs -Wait
+    New-Item -ItemType File -Path "$workDir\Script3.flag" | Out-Null
+
+    Write-Host "`n Rebooting to continue setup..."
+
+    Invoke-Reboot
+
+}
+
+
+# Install SQL Server
+choco install sql-server-express
+
+# Install SSMS
+choco install sql-server-management-studio
+
 
 $ErrorActionPreference = 'Stop'
 
