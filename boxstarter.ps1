@@ -22,7 +22,7 @@ Remove-Item $zipFilePath
 
 Write-Host "Files extracted to: $workDir"
 
-cd $workDir
+Start-Process "cmd.exe" -ArgumentList "/c `"$workDir\0_AllowPowershell (right-click and run as administrator).cmd`"" -Verb RunAs -Wait
 
 $ErrorActionPreference = 'Stop'
 
