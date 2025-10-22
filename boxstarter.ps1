@@ -11,6 +11,7 @@ $Script4Flag = Join-Path $workDir "Script4.flag"
 $OfficeFlag = Join-Path $workDir "Office.flag"
 $Script6Flag = Join-Path $workDir "Script6.flag"
 $Script7Flag = Join-Path $workDir "Script7.flag"
+$ConfigFlag = Join-Path $workDir "config.flag"
 ### Install Core
 
 
