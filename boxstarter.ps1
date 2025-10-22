@@ -7,6 +7,7 @@ $Script0Flag = Join-Path $workDir "Script0.flag"
 $Script2Flag = Join-Path $workDir "Script2.flag"
 $Script3Flag = Join-Path $workDir "Script3.flag"
 $SQLFlag =  Join-Path $workDir "SQL.flag"
+$Script4Flag = Join-Path $workDir "Script4.flag"
 
 ### Install Core
 
@@ -31,8 +32,6 @@ if (-not (Test-Path $DownloadFlag)) {
 
     New-Item -ItemType File -Path "$workDir\Download.flag" | Out-Null
 
-    Write-Host "`n Rebooting to continue setup..."
-
 }
 
 
@@ -43,7 +42,6 @@ if (-not (Test-Path $Script0Flag)) {
 
     New-Item -ItemType File -Path "$workDir\Script0.flag" | Out-Null
 
-    Write-Host "`n Rebooting to continue setup..."
 }
 
 
@@ -66,8 +64,6 @@ if (-not (Test-Path $Script3Flag)) {
     
     Start-Process "powershell.exe" -ArgumentList "-ExecutionPolicy Bypass -NoProfile -File `"$workDir\3_LumiComputerSetup-AfterInstallingOS.ps1`"" -Verb RunAs -Wait
     New-Item -ItemType File -Path "$workDir\Script3.flag" | Out-Null
-
-    Write-Host "`n Rebooting to continue setup..."
 
 }
 
@@ -92,8 +88,6 @@ if (-not (Test-Path $Script4Flag)) {
     
     Start-Process "powershell.exe" -ArgumentList "-ExecutionPolicy Bypass -NoProfile -File `"$workDir\4_LumiComputerSetup-AfterInstallingSqlExpress.ps1`"" -Verb RunAs -Wait
     New-Item -ItemType File -Path "$workDir\Script4.flag" | Out-Null
-
-    Write-Host "`n Rebooting to continue setup..."
 
 }
 
