@@ -102,16 +102,16 @@ if (-not (Test-Path $OfficeFlag)) {
 
 }
 
-#Run Windows Updates
+# # Run Windows Updates
 # Install-WindowsUpdate -AcceptEula
 
-# Script 6
-if (-not (Test-Path $Script6Flag)) {
+# # Script 6
+# if (-not (Test-Path $Script6Flag)) {
     
-    Start-Process "powershell.exe" -ArgumentList "-ExecutionPolicy Bypass -NoProfile -File `"$workDir\6_LumiComputerSetup-AfterInstallingWindowsUpdates.ps1`"" -Verb RunAs -Wait
-    New-Item -ItemType File -Path "$workDir\Script6.flag" | Out-Null
+#     Start-Process "powershell.exe" -ArgumentList "-ExecutionPolicy Bypass -NoProfile -File `"$workDir\6_LumiComputerSetup-AfterInstallingWindowsUpdates.ps1`"" -Verb RunAs -Wait
+#     New-Item -ItemType File -Path "$workDir\Script6.flag" | Out-Null
 
-}
+# }
 
 # # Script 7
 
@@ -122,7 +122,7 @@ if (-not (Test-Path $Script6Flag)) {
 
 # }
 
-
+Start-Process -Wait -FilePath "$workDir\Lumi\Lumi AGM Installer v27.0.0.1.exe" -ArgumentList "/S" -PassThru
 
 $ErrorActionPreference = 'Stop'
 
