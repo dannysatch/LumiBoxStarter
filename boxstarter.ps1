@@ -1,8 +1,8 @@
-New-Item -Path 'C:\ProgramData\Boxstarter\SetupFlags\' -ItemType Directory
+New-Item -Path 'C:\ProgramData\Boxstarter\SetupFlags\' -ItemType Directory -Force | Out-Null
 
+$workDir = "C:\LumiSetup\" 
 $zipUrl = "https://boxstarterlumi.blob.core.windows.net/installers/boxstarter.zip"
 $zipFilePath = Join-Path $workDir "boxstarter.zip"
-$workDir = "C:\LumiSetup\"
 
 ### Install Core
 
