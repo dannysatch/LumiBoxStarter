@@ -28,6 +28,8 @@ Start-Process "cmd.exe" -ArgumentList "/c `"$workDir\0_AllowPowershell (right-cl
 # Script 2
 Start-Process "powershell.exe" -ArgumentList "-ExecutionPolicy Bypass -NoProfile -File `"$workDir\2_LumiComputerSetup-AfterInstallingOS.ps1`"" -Verb RunAs -Wait
 
+Invoke-Reboot
+
 # Script 3
 Start-Process "powershell.exe" -ArgumentList "-ExecutionPolicy Bypass -NoProfile -File `"$workDir\3_LumiComputerSetup-AfterInstallingOS.ps1`"" -Verb RunAs -Wait
 
