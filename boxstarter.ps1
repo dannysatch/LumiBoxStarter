@@ -6,6 +6,7 @@ $DownloadFlag = Join-Path $workDir "Download.flag"
 $Script0Flag = Join-Path $workDir "Script0.flag"
 $Script2Flag = Join-Path $workDir "Script2.flag"
 $Script3Flag = Join-Path $workDir "Script3.flag"
+$SQLFlag =  Join-Path $workDir "SQL.flag"
 
 ### Install Core
 
@@ -68,17 +69,33 @@ if (-not (Test-Path $Script3Flag)) {
 
     Write-Host "`n Rebooting to continue setup..."
 
+}
+
+# SQL Setup
+if (-not (Test-Path $SQLFlag)) {
+    
+    # Install SQL Server
+    choco install sql-server-express
+
+    # Install SSMS
+    choco install sql-server-management-studio
+    
+    New-Item -ItemType File -Path "$workDir\SQL.flag" | Out-Null
+
+    Write-Host "`n Rebooting to continue setup..."
+
     Invoke-Reboot
 
 }
 
+if (-not (Test-Path $Script4Flag)) {
+    
+    Start-Process "powershell.exe" -ArgumentList "-ExecutionPolicy Bypass -NoProfile -File `"$workDir\4_LumiComputerSetup-AfterInstallingSqlExpress.ps1`"" -Verb RunAs -Wait
+    New-Item -ItemType File -Path "$workDir\Script4.flag" | Out-Null
 
-# Install SQL Server
-choco install sql-server-express
+    Write-Host "`n Rebooting to continue setup..."
 
-# Install SSMS
-choco install sql-server-management-studio
-
+}
 
 $ErrorActionPreference = 'Stop'
 
