@@ -99,6 +99,10 @@ if (-not (Test-Path $OfficeFlag)) {
 
 }
 
+#Run Windows Updates
+Install-WindowsUpdate -AcceptEula
+
+
 
 $ErrorActionPreference = 'Stop'
 
