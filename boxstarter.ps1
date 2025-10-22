@@ -123,7 +123,7 @@ if (-not (Test-Path $OfficeFlag)) {
 # }
 
 # AGM Core Install
-# Start-Process -Wait -FilePath "$workDir\Lumi\Lumi AGM Installer v27.0.0.1.exe" -ArgumentList "/S" -PassThru
+Start-Process -Wait -FilePath "$workDir\Lumi\Lumi AGM Installer v27.0.0.1.exe" -ArgumentList "/S" -PassThru
 
 # IML Communicator Hub Service Installer v1.38.0.0
 Start-Process -Wait -FilePath "$workDir\Lumi\IML Communicator Hub Service Installer v1.38.0.0.exe" -ArgumentList "/S" -PassThru
