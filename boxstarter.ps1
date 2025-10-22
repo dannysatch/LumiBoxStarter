@@ -10,6 +10,7 @@ $SQLFlag =  Join-Path $workDir "SQL.flag"
 $Script4Flag = Join-Path $workDir "Script4.flag"
 $OfficeFlag = Join-Path $workDir "Office.flag"
 $Script6Flag = Join-Path $workDir "Script6.flag"
+$Script7Flag = Join-Path $workDir "Script7.flag"
 ### Install Core
 
 # Ensure the lib folder exists
@@ -85,6 +86,7 @@ if (-not (Test-Path $SQLFlag)) {
 
 }
 
+# Script 4
 if (-not (Test-Path $Script4Flag)) {
     
     Start-Process "powershell.exe" -ArgumentList "-ExecutionPolicy Bypass -NoProfile -File `"$workDir\4_LumiComputerSetup-AfterInstallingSqlExpress.ps1`"" -Verb RunAs -Wait
@@ -92,6 +94,7 @@ if (-not (Test-Path $Script4Flag)) {
 
 }
 
+# Office Install
 if (-not (Test-Path $OfficeFlag)) {
     
     choco install office365business
@@ -102,10 +105,20 @@ if (-not (Test-Path $OfficeFlag)) {
 #Run Windows Updates
 # Install-WindowsUpdate -AcceptEula
 
+# Script 6
 if (-not (Test-Path $Script6Flag)) {
     
-    Start-Process "powershell.exe" -ArgumentList "-ExecutionPolicy Bypass -NoProfile -File `"$workDir\6_LumiComputerSetup-AfterInstallingWindowsUpdates`"" -Verb RunAs -Wait
+    Start-Process "powershell.exe" -ArgumentList "-ExecutionPolicy Bypass -NoProfile -File `"$workDir\6_LumiComputerSetup-AfterInstallingWindowsUpdates.ps1`"" -Verb RunAs -Wait
     New-Item -ItemType File -Path "$workDir\Script6.flag" | Out-Null
+
+}
+
+# Script 7
+
+f (-not (Test-Path $Script7Flag)) {
+    
+    Start-Process "powershell.exe" -ArgumentList "-ExecutionPolicy Bypass -NoProfile -File `"$workDir\Fix LumiAGM log and addin file permissions.ps1`"" -Verb RunAs -Wait
+    New-Item -ItemType File -Path "$workDir\Script7.flag" | Out-Null
 
 }
 
