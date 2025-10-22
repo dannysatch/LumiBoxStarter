@@ -9,7 +9,7 @@ $Script3Flag = Join-Path $workDir "Script3.flag"
 $SQLFlag =  Join-Path $workDir "SQL.flag"
 $Script4Flag = Join-Path $workDir "Script4.flag"
 $OfficeFlag = Join-Path $workDir "Office.flag"
-
+$Script6Flag = Join-Path $workDir "Script6.flag"
 ### Install Core
 
 # Ensure the lib folder exists
@@ -100,9 +100,14 @@ if (-not (Test-Path $OfficeFlag)) {
 }
 
 #Run Windows Updates
-Install-WindowsUpdate -AcceptEula
+# Install-WindowsUpdate -AcceptEula
 
+if (-not (Test-Path $Script6Flag)) {
+    
+    Start-Process "powershell.exe" -ArgumentList "-ExecutionPolicy Bypass -NoProfile -File `"$workDir\6_LumiComputerSetup-AfterInstallingWindowsUpdates`"" -Verb RunAs -Wait
+    New-Item -ItemType File -Path "$workDir\Script6.flag" | Out-Null
 
+}
 
 $ErrorActionPreference = 'Stop'
 
