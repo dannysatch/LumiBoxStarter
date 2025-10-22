@@ -122,7 +122,45 @@ if (-not (Test-Path $OfficeFlag)) {
 
 # }
 
+# AGM Core Install
 Start-Process -Wait -FilePath "$workDir\Lumi\Lumi AGM Installer v27.0.0.1.exe" -ArgumentList "/S" -PassThru
+
+# IML Communicator Hub Service Installer v1.38.0.0
+Start-Process -Wait -FilePath "$workDir\Lumi\IML Communicator Hub Service Installer v1.38.0.0.exe" -ArgumentList "/S" -PassThru
+
+# IML Connector System Installer v2.50.0.0
+Start-Process -Wait -FilePath "$workDir\Lumi\IML Connector System Installer v2.50.0.0.exe" -ArgumentList "/S" -PassThru
+
+# Lumi AGM Reg and Vote Installer v3.8.0.1
+Start-Process -Wait -FilePath "$workDir\Lumi\Lumi AGM Reg and Vote Installer v3.8.0.1.exe" -ArgumentList "/S" -PassThru
+
+# Lumi AGM Studio Installer v27.0.0.0
+Start-Process -Wait -FilePath "$workDir\Lumi\Lumi AGM Studio Installer v27.0.0.0.exe" -ArgumentList "/S" -PassThru
+
+# Lumi AGM Web Apps Installer v27.0.0.0
+Start-Process -Wait -FilePath "$workDir\Lumi\Lumi AGM Web Apps Installer v27.0.0.0.exe" -ArgumentList "/S" -PassThru
+
+# Lumi Audience Display Installer v2.48.0.0
+Start-Process -Wait -FilePath "$workDir\Lumi\Lumi Audience Display Installer v2.48.0.0.exe" -ArgumentList "/S" -PassThru
+
+# Lumi Kiosk Browser Installer v27.0.0.2
+Start-Process -Wait -FilePath "$workDir\Lumi\Lumi Kiosk Browser Installer v27.0.0.2.exe" -ArgumentList "/S" -PassThru
+
+# Lumi Live DataBase Backup Installer v2.50.0.0
+Start-Process -Wait -FilePath "$workDir\Lumi\Lumi Live DataBase Backup Installer v2.50.0.0.exe" -ArgumentList "/S" -PassThru
+
+# Lumi Magma Hub Service Installer v1.4.0.0
+Start-Process -Wait -FilePath "$workDir\Lumi\Lumi Magma Hub Service Installer v1.4.0.0.exe" -ArgumentList "/S" -PassThru
+
+# Lumi ProjectorPowerPoint Installer v2.22.0.0
+Start-Process -Wait -FilePath "$workDir\Lumi\Lumi ProjectorPowerPoint Installer v2.22.0.0.exe" -ArgumentList "/S" -PassThru
+
+# Lumi Register Installer v2.40.0.0
+Start-Process -Wait -FilePath "$workDir\Lumi\Lumi Register Installer v2.40.0.0.exe" -ArgumentList "/S" -PassThru
+
+# Lumi Signature Capture Installer v2.24.0.2
+Start-Process -Wait -FilePath "$workDir\Lumi\Lumi Signature Capture Installer v2.24.0.2.exe" -ArgumentList "/S" -PassThru
+
 
 $ErrorActionPreference = 'Stop'
 
