@@ -1,52 +1,28 @@
 New-Item -Path 'C:\ProgramData\Boxstarter\SetupFlags\' -ItemType Directory
-# $firefoxInstalled = Test-Path "C:\ProgramData\Boxstarter\SetupFlags\Firefox.txt"
-# $vscodeInstalled  = Test-Path "C:\ProgramData\Boxstarter\SetupFlags\VSCode.txt"
 
-# if (-not $firefoxInstalled) {
-#     Write-Host "`n Installing Firefox..."
-#     choco install firefox -y
-#     New-Item -ItemType File -Path "C:\ProgramData\Boxstarter\SetupFlags\Firefox.txt" | Out-Null
-
-#     Write-Host "`n Rebooting to continue setup..."
-#     Invoke-Reboot
-#   }
-
-# if (-not $vscodeInstalled) {
-#       Write-Host "`n Installing VS Code..."
-#       choco install vscode -y
-#       New-Item -ItemType File -Path "C:\ProgramData\Boxstarter\SetupFlags\VSCode.txt" | Out-Null
-#   }
-
-$zipUrl = "https://boxstarterlumi.blob.core.windows.net/installers/AGMCore.zip"
-$packageName = "lumiagm.1.0.1"
-$libPath = "C:\temp\$packageName"
-$zipFilePath = "$libPath\AGMCore.zip"
+$zipUrl = "https://boxstarterlumi.blob.core.windows.net/installers/boxstarter.zip"
+$zipFilePath = Join-Path $workDir "boxstarter.zip"
+$workDir = "C:\LumiSetup\"
 
 ### Install Core
 
 # Ensure the lib folder exists
 if (-not (Test-Path $libPath)) {
-    New-Item -ItemType Directory -Path $libPath -Force | Out-Null
+    New-Item -Path $workDir -ItemType Directory -Force | Out-Null
 }
 
 # Download the ZIP file
 Invoke-WebRequest -Uri $zipUrl -OutFile $zipFilePath
 
 # Unzip contents
-Expand-Archive -LiteralPath $zipFilePath -DestinationPath $libPath -Force
+Expand-Archive -LiteralPath $zipFilePath -DestinationPath $workDir -Force
 
 # Optionally delete the ZIP after extraction
 Remove-Item $zipFilePath
 
-Write-Host "Files extracted to: $libPath"
+Write-Host "Files extracted to: $workDir"
 
-cd $libPath
-
-choco install lumiagm -s .
-
-Write-Host "AGM Core Installed"
-
-Write-Host "`n Setup complete!"
+cd $workDir
 
 $ErrorActionPreference = 'Stop'
 
