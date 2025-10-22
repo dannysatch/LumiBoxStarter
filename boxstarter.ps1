@@ -14,7 +14,7 @@ if (-not (Test-Path $workDir)) {
 }
 
 # Download the ZIP file
-if (-not $DownloadFlag) {
+if (-not (Test-Path $DownloadFlag)) {
     
     # Download the ZIP file
     Invoke-WebRequest -Uri $zipUrl -OutFile $zipFilePath
@@ -31,27 +31,22 @@ if (-not $DownloadFlag) {
 
     Write-Host "`n Rebooting to continue setup..."
 
-    Invoke-Reboot
-
 }
 
 
 # Script 0 (Set ExecutionPolicy)
-if (-not $Script0Flag) {
+if (-not (Test-Path $Script0Flag)) {
     
     Start-Process "cmd.exe" -ArgumentList "/c `"$workDir\0_AllowPowershell (right-click and run as administrator).cmd`"" -Verb RunAs -Wait
 
     New-Item -ItemType File -Path "$workDir\Script0.flag" | Out-Null
 
     Write-Host "`n Rebooting to continue setup..."
-
-    Invoke-Reboot
-
 }
 
 
 # Script 2
- if (-not $Script2Flag) {
+ if (-not (Test-Path $Script2Flag)) {
     
     Start-Process "powershell.exe" -ArgumentList "-ExecutionPolicy Bypass -NoProfile -File `"$workDir\2_LumiComputerSetup-AfterInstallingOS.ps1`"" -Verb RunAs -Wait
 
