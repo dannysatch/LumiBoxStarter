@@ -115,12 +115,14 @@ if (-not (Test-Path $Script6Flag)) {
 
 # Script 7
 
-f (-not (Test-Path $Script7Flag)) {
+if (-not (Test-Path $Script7Flag)) {
     
     Start-Process "powershell.exe" -ArgumentList "-ExecutionPolicy Bypass -NoProfile -File `"$workDir\Fix LumiAGM log and addin file permissions.ps1`"" -Verb RunAs -Wait
     New-Item -ItemType File -Path "$workDir\Script7.flag" | Out-Null
 
 }
+
+
 
 $ErrorActionPreference = 'Stop'
 
