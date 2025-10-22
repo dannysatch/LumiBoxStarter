@@ -97,7 +97,7 @@ if (-not (Test-Path $Script4Flag)) {
 # Office Install
 if (-not (Test-Path $OfficeFlag)) {
     
-    choco install office365business
+    Start-Process "powershell.exe" -ArgumentList "-ExecutionPolicy Bypass -NoProfile -File `"$workDir\5_LumiComputerSetup-InstallOffice.ps1`"" -Verb RunAs -Wait
     New-Item -ItemType File -Path "$workDir\Office.flag" | Out-Null
 
 }
@@ -113,14 +113,14 @@ if (-not (Test-Path $OfficeFlag)) {
 
 # }
 
-# # Script 7
+# Script 7
 
-# if (-not (Test-Path $Script7Flag)) {
+if (-not (Test-Path $Script7Flag)) {
     
-#     Start-Process "powershell.exe" -ArgumentList "-ExecutionPolicy Bypass -NoProfile -File `"$workDir\Fix LumiAGM log and addin file permissions.ps1`"" -Verb RunAs -Wait
-#     New-Item -ItemType File -Path "$workDir\Script7.flag" | Out-Null
+    Start-Process "powershell.exe" -ArgumentList "-ExecutionPolicy Bypass -NoProfile -File `"$workDir\Fix LumiAGM log and addin file permissions.ps1`"" -Verb RunAs -Wait
+    New-Item -ItemType File -Path "$workDir\Script7.flag" | Out-Null
 
-# }
+}
 
 # AGM Core Install
 Start-Process -Wait -FilePath "$workDir\Lumi\Lumi AGM Installer v27.0.0.1.exe" -ArgumentList "/S" -PassThru
