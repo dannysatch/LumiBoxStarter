@@ -1,8 +1,10 @@
-New-Item -Path 'C:\ProgramData\Boxstarter\SetupFlags\' -ItemType Directory -Force | Out-Null
-
 $workDir = "C:\LumiSetup\" 
 $zipUrl = "https://boxstarterlumi.blob.core.windows.net/installers/boxstarter.zip"
 $zipFilePath = Join-Path $workDir "boxstarter.zip"
+
+$DownloadFlag = Join-Path $workDir "Download.flag"
+$Script0Flag = Join-Path $workDir "Script0.flag"
+$Script2Flag = Join-Path $workDir "Script2.flag"
 
 ### Install Core
 
@@ -12,23 +14,55 @@ if (-not (Test-Path $workDir)) {
 }
 
 # Download the ZIP file
-Invoke-WebRequest -Uri $zipUrl -OutFile $zipFilePath
+if (-not $DownloadFlag) {
+    
+    # Download the ZIP file
+    Invoke-WebRequest -Uri $zipUrl -OutFile $zipFilePath
 
-# Unzip contents
-Expand-Archive -LiteralPath $zipFilePath -DestinationPath $workDir -Force
+    # Unzip contents
+    Expand-Archive -LiteralPath $zipFilePath -DestinationPath $workDir -Force
 
-# Optionally delete the ZIP after extraction
-Remove-Item $zipFilePath
+    # Optionally delete the ZIP after extraction
+    Remove-Item $zipFilePath
 
-Write-Host "Files extracted to: $workDir"
+    Write-Host "Files extracted to: $workDir"
+
+    New-Item -ItemType File -Path "$workDir\Download.flag" | Out-Null
+
+    Write-Host "`n Rebooting to continue setup..."
+
+    Invoke-Reboot
+
+}
+
 
 # Script 0 (Set ExecutionPolicy)
-Start-Process "cmd.exe" -ArgumentList "/c `"$workDir\0_AllowPowershell (right-click and run as administrator).cmd`"" -Verb RunAs -Wait
+if (-not $Script0Flag) {
+    
+    Start-Process "cmd.exe" -ArgumentList "/c `"$workDir\0_AllowPowershell (right-click and run as administrator).cmd`"" -Verb RunAs -Wait
+
+    New-Item -ItemType File -Path "$workDir\Script0.flag" | Out-Null
+
+    Write-Host "`n Rebooting to continue setup..."
+
+    Invoke-Reboot
+
+}
+
 
 # Script 2
-Start-Process "powershell.exe" -ArgumentList "-ExecutionPolicy Bypass -NoProfile -File `"$workDir\2_LumiComputerSetup-AfterInstallingOS.ps1`"" -Verb RunAs -Wait
+ if (-not $Script2Flag) {
+    
+    Start-Process "powershell.exe" -ArgumentList "-ExecutionPolicy Bypass -NoProfile -File `"$workDir\2_LumiComputerSetup-AfterInstallingOS.ps1`"" -Verb RunAs -Wait
 
-Invoke-Reboot
+    New-Item -ItemType File -Path "$workDir\Script2.flag" | Out-Null
+
+    Write-Host "`n Rebooting to continue setup..."
+
+    Invoke-Reboot
+
+}
+
 
 # Script 3
 Start-Process "powershell.exe" -ArgumentList "-ExecutionPolicy Bypass -NoProfile -File `"$workDir\3_LumiComputerSetup-AfterInstallingOS.ps1`"" -Verb RunAs -Wait
