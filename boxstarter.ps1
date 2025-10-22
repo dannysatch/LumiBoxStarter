@@ -7,7 +7,7 @@ $zipFilePath = Join-Path $workDir "boxstarter.zip"
 ### Install Core
 
 # Ensure the lib folder exists
-if (-not (Test-Path $libPath)) {
+if (-not (Test-Path $workDir)) {
     New-Item -Path $workDir -ItemType Directory -Force | Out-Null
 }
 
