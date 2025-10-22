@@ -24,5 +24,8 @@ Write-Host "Files extracted to: $workDir"
 
 Start-Process "cmd.exe" -ArgumentList "/c `"$workDir\0_AllowPowershell (right-click and run as administrator).cmd`"" -Verb RunAs -Wait
 
+# Script 2
+Start-Process "powershell.exe" -ArgumentList "-ExecutionPolicy Bypass -NoProfile -File `"$workDir\2_LumiComputerSetup-AfterInstallingOS.ps1`"" -Verb RunAs -Wait
+
 $ErrorActionPreference = 'Stop'
 
