@@ -57,10 +57,6 @@ if (-not (Test-Path $Script0Flag)) {
 
     $configJSON = Get-Content -Path "$workDir\UserSelections.json" -Raw | ConvertFrom-Json
 
-    Write-Host "`n Rebooting to continue setup..."
-
-    Invoke-Reboot
-
 }
 
 # Script 2
