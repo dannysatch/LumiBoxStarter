@@ -111,8 +111,8 @@ if (-not (Test-Path $Script4Flag)) {
 # Office Install
 if (-not (Test-Path $OfficeFlag)) {
     
-    Start-Process "powershell.exe" -ArgumentList "-ExecutionPolicy Bypass -NoProfile -File `"$workDir\5_LumiComputerSetup-InstallOffice.ps1`"" -Verb RunAs -Wait
-    # choco install office365business --params "/configpath:$workDir\Resources\MSOfficeInstallation\configuration.xml"
+    # Start-Process "powershell.exe" -ArgumentList "-ExecutionPolicy Bypass -NoProfile -File `"$workDir\5_LumiComputerSetup-InstallOffice.ps1`"" -Verb RunAs -Wait
+    choco install office365business --params "/configpath:$workDir\Resources\MSOfficeInstallation\configuration.xml"
     New-Item -ItemType File -Path "$workDir\Office.flag" | Out-Null
 
 }
