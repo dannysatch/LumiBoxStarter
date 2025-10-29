@@ -9,6 +9,7 @@ $Script2Flag = Join-Path $workDir "Script2.flag"
 $Script3Flag = Join-Path $workDir "Script3.flag"
 $SQLFlag =  Join-Path $workDir "SQL.flag"
 $ConfigFlag = Join-Path $workDir "config.flag"
+$OfficeFlag = Join-Path $workDir "Office.flag
 
 
 ## Download Set Up Files
