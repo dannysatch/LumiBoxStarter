@@ -55,9 +55,10 @@ if (-not (Test-Path $Script0Flag)) {
 
     New-Item -ItemType File -Path "$workDir\config.flag" | Out-Null
 
-    $configJSON = Get-Content -Path "$workDir\UserSelections.json" -Raw | ConvertFrom-Json
 
 }
+
+$configJSON = Get-Content -Path "$workDir\UserSelections.json" -Raw | ConvertFrom-Json
 
 # Script 2
  if (-not (Test-Path $Script1Flag)) {
