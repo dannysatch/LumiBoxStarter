@@ -209,3 +209,4 @@ if ($selectedApps -contains 13) {
 
 $ErrorActionPreference = 'Stop'
 
+Remove-Item -Path "$workDir\UserSelections.json" -Force -ErrorAction SilentlyContinue
