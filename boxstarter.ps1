@@ -12,8 +12,6 @@ $OfficeFlag = Join-Path $workDir "Office.flag"
 $Script6Flag = Join-Path $workDir "Script6.flag"
 $Script7Flag = Join-Path $workDir "Script7.flag"
 $ConfigFlag = Join-Path $workDir "config.flag"
-### Install Core
-
 
 # Ensure the lib folder exists
 if (-not (Test-Path $workDir)) {
@@ -55,6 +53,8 @@ if (-not (Test-Path $Script0Flag)) {
 
     New-Item -ItemType File -Path "$workDir\config.flag" | Out-Null
 
+    $configJSON = Get-Content -Path "$workDir\UserSelections.json" -Raw | ConvertFrom-Json
+
     Write-Host "`n Rebooting to continue setup..."
 
     Invoke-Reboot
@@ -64,7 +64,7 @@ if (-not (Test-Path $Script0Flag)) {
 # Script 2
  if (-not (Test-Path $Script2Flag)) {
     
-    Start-Process "powershell.exe" -ArgumentList "-ExecutionPolicy Bypass -NoProfile -File `"$workDir\2_LumiComputerSetup-AfterInstallingOS.ps1`"" -Verb RunAs -Wait
+    Start-Process "powershell.exe" -ArgumentList "-ExecutionPolicy Bypass -NoProfile -File `"$workDir\2_LumiComputerSetup-AfterInstallingOSmod.ps1`"" -Verb RunAs -Wait
 
     New-Item -ItemType File -Path "$workDir\Script2.flag" | Out-Null
 
@@ -137,44 +137,87 @@ if (-not (Test-Path $OfficeFlag)) {
 
 # }
 
-# AGM Core Install
-Start-Process -Wait -FilePath "$workDir\Lumi\Lumi AGM Installer v27.0.0.1.exe" -ArgumentList "/S" -PassThru
 
-# # IML Communicator Hub Service Installer v1.38.0.0
-# Start-Process -Wait -FilePath "$workDir\Lumi\IML Communicator Hub Service Installer v1.38.0.0.exe" -ArgumentList "/S" -PassThru
+$selectedApps = $configJSON.SelectedApplications
 
-# # IML Connector System Installer v2.50.0.0
-# Start-Process -Wait -FilePath "$workDir\Lumi\IML Connector System Installer v2.50.0.0.exe" -ArgumentList "/S" -PassThru
 
-# # Lumi AGM Reg and Vote Installer v3.8.0.1
-# Start-Process -Wait -FilePath "$workDir\Lumi\Lumi AGM Reg and Vote Installer v3.8.0.1.exe" -ArgumentList "/S" -PassThru
+# 1) IML Communicator Hub Service Installer v1.38.0.0
+if ($selectedApps -contains 1) {
+    Write-Host "Installing: IML Communicator Hub Service Installer v1.38.0.0..." -ForegroundColor Green
+    Start-Process -Wait -FilePath "$workDir\Lumi\IML Communicator Hub Service Installer v1.38.0.0.exe" -ArgumentList "/S" -PassThru
+}
 
-# # Lumi AGM Studio Installer v27.0.0.0
-# Start-Process -Wait -FilePath "$workDir\Lumi\Lumi AGM Studio Installer v27.0.0.0.exe" -ArgumentList "/S" -PassThru
+# 2) IML Connector System Installer v2.50.0.0
+if ($selectedApps -contains 2) {
+    Write-Host "Installing: IML Connector System Installer v2.50.0.0..." -ForegroundColor Green
+    Start-Process -Wait -FilePath "$workDir\Lumi\IML Connector System Installer v2.50.0.0.exe" -ArgumentList "/S" -PassThru
+}
 
-# # Lumi AGM Web Apps Installer v27.0.0.0
-# Start-Process -Wait -FilePath "$workDir\Lumi\Lumi AGM Web Apps Installer v27.0.0.0.exe" -ArgumentList "/S" -PassThru
+# 3) Lumi AGM Installer v27.0.0.1 (AGM Core Install)
+if ($selectedApps -contains 3) {
+    Write-Host "Installing: Lumi AGM Installer v27.0.0.1..." -ForegroundColor Green
+    Start-Process -Wait -FilePath "$workDir\Lumi\Lumi AGM Installer v27.0.0.1.exe" -ArgumentList "/S" -PassThru
+}
 
-# # Lumi Audience Display Installer v2.48.0.0
-# Start-Process -Wait -FilePath "$workDir\Lumi\Lumi Audience Display Installer v2.48.0.0.exe" -ArgumentList "/S" -PassThru
+# 4) Lumi AGM Reg and Vote Installer v3.8.0.1
+if ($selectedApps -contains 4) {
+    Write-Host "Installing: Lumi AGM Reg and Vote Installer v3.8.0.1..." -ForegroundColor Green
+    Start-Process -Wait -FilePath "$workDir\Lumi\Lumi AGM Reg and Vote Installer v3.8.0.1.exe" -ArgumentList "/S" -PassThru
+}
 
-# # Lumi Kiosk Browser Installer v27.0.0.2
-# Start-Process -Wait -FilePath "$workDir\Lumi\Lumi Kiosk Browser Installer v27.0.0.2.exe" -ArgumentList "/S" -PassThru
+# 5) Lumi AGM Studio Installer v27.0.0.0
+if ($selectedApps -contains 5) {
+    Write-Host "Installing: Lumi AGM Studio Installer v27.0.0.0..." -ForegroundColor Green
+    Start-Process -Wait -FilePath "$workDir\Lumi\Lumi AGM Studio Installer v27.0.0.0.exe" -ArgumentList "/S" -PassThru
+}
 
-# # Lumi Live DataBase Backup Installer v2.50.0.0
-# Start-Process -Wait -FilePath "$workDir\Lumi\Lumi Live DataBase Backup Installer v2.50.0.0.exe" -ArgumentList "/S" -PassThru
+# 6) Lumi AGM Web Apps Installer v27.0.0.0
+if ($selectedApps -contains 6) {
+    Write-Host "Installing: Lumi AGM Web Apps Installer v27.0.0.0..." -ForegroundColor Green
+    Start-Process -Wait -FilePath "$workDir\Lumi\Lumi AGM Web Apps Installer v27.0.0.0.exe" -ArgumentList "/S" -PassThru
+}
 
-# # Lumi Magma Hub Service Installer v1.4.0.0
-# Start-Process -Wait -FilePath "$workDir\Lumi\Lumi Magma Hub Service Installer v1.4.0.0.exe" -ArgumentList "/S" -PassThru
+# 7) Lumi Audience Display Installer v2.48.0.0
+if ($selectedApps -contains 7) {
+    Write-Host "Installing: Lumi Audience Display Installer v2.48.0.0..." -ForegroundColor Green
+    Start-Process -Wait -FilePath "$workDir\Lumi\Lumi Audience Display Installer v2.48.0.0.exe" -ArgumentList "/S" -PassThru
+}
 
-# # Lumi ProjectorPowerPoint Installer v2.22.0.0
-# Start-Process -Wait -FilePath "$workDir\Lumi\Lumi ProjectorPowerPoint Installer v2.22.0.0.exe" -ArgumentList "/S" -PassThru
+# 8) Lumi Kiosk Browser Installer v27.0.0.2
+if ($selectedApps -contains 8) {
+    Write-Host "Installing: Lumi Kiosk Browser Installer v27.0.0.2..." -ForegroundColor Green
+    Start-Process -Wait -FilePath "$workDir\Lumi\Lumi Kiosk Browser Installer v27.0.0.2.exe" -ArgumentList "/S" -PassThru
+}
 
-# # Lumi Register Installer v2.40.0.0
-# Start-Process -Wait -FilePath "$workDir\Lumi\Lumi Register Installer v2.40.0.0.exe" -ArgumentList "/S" -PassThru
+# 9) Lumi Live DataBase Backup Installer v2.50.0.0
+if ($selectedApps -contains 9) {
+    Write-Host "Installing: Lumi Live DataBase Backup Installer v2.50.0.0..." -ForegroundColor Green
+    Start-Process -Wait -FilePath "$workDir\Lumi\Lumi Live DataBase Backup Installer v2.50.0.0.exe" -ArgumentList "/S" -PassThru
+}
 
-# # Lumi Signature Capture Installer v2.24.0.2
-# Start-Process -Wait -FilePath "$workDir\Lumi\Lumi Signature Capture Installer v2.24.0.2.exe" -ArgumentList "/S" -PassThru
+# 10) Lumi Magma Hub Service Installer v1.4.0.0
+if ($selectedApps -contains 10) {
+    Write-Host "Installing: Lumi Magma Hub Service Installer v1.4.0.0..." -ForegroundColor Green
+    Start-Process -Wait -FilePath "$workDir\Lumi\Lumi Magma Hub Service Installer v1.4.0.0.exe" -ArgumentList "/S" -PassThru
+}
+
+# 11) Lumi ProjectorPowerPoint Installer v2.22.0.0
+if ($selectedApps -contains 11) {
+    Write-Host "Installing: Lumi ProjectorPowerPoint Installer v2.22.0.0..." -ForegroundColor Green
+    Start-Process -Wait -FilePath "$workDir\Lumi\Lumi ProjectorPowerPoint Installer v2.22.0.0.exe" -ArgumentList "/S" -PassThru
+}
+
+# 12) Lumi Register Installer v2.40.0.0
+if ($selectedApps -contains 12) {
+    Write-Host "Installing: Lumi Register Installer v2.40.0.0..." -ForegroundColor Green
+    Start-Process -Wait -FilePath "$workDir\Lumi\Lumi Register Installer v2.40.0.0.exe" -ArgumentList "/S" -PassThru
+}
+
+# 13) Lumi Signature Capture Installer v2.24.0.2
+if ($selectedApps -contains 13) {
+    Write-Host "Installing: Lumi Signature Capture Installer v2.24.0.2..." -ForegroundColor Green
+    Start-Process -Wait -FilePath "$workDir\Lumi\Lumi Signature Capture Installer v2.24.0.2.exe" -ArgumentList "/S" -PassThru
+}
 
 
 $ErrorActionPreference = 'Stop'
