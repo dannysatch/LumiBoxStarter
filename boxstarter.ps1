@@ -4,13 +4,10 @@ $zipFilePath = Join-Path $workDir "boxstarter.zip"
 
 $DownloadFlag = Join-Path $workDir "Download.flag"
 $Script0Flag = Join-Path $workDir "Script0.flag"
+$Script1Flag = Join-Path $workDir "Script1.flag"
 $Script2Flag = Join-Path $workDir "Script2.flag"
 $Script3Flag = Join-Path $workDir "Script3.flag"
 $SQLFlag =  Join-Path $workDir "SQL.flag"
-$Script4Flag = Join-Path $workDir "Script4.flag"
-$OfficeFlag = Join-Path $workDir "Office.flag"
-$Script6Flag = Join-Path $workDir "Script6.flag"
-$Script7Flag = Join-Path $workDir "Script7.flag"
 $ConfigFlag = Join-Path $workDir "config.flag"
 
 # Ensure the lib folder exists
@@ -62,24 +59,15 @@ if (-not (Test-Path $Script0Flag)) {
 }
 
 # Script 2
- if (-not (Test-Path $Script2Flag)) {
+ if (-not (Test-Path $Script1Flag)) {
     
-    Start-Process "powershell.exe" -ArgumentList "-ExecutionPolicy Bypass -NoProfile -File `"$workDir\2_LumiComputerSetup-AfterInstallingOSmod.ps1`"" -Verb RunAs -Wait
+    Start-Process "powershell.exe" -ArgumentList "-ExecutionPolicy Bypass -NoProfile -File `"$workDir\1_LumiComputerSetup-AfterInstallingOS.ps1`"" -Verb RunAs -Wait
 
     New-Item -ItemType File -Path "$workDir\Script2.flag" | Out-Null
 
     Write-Host "`n Rebooting to continue setup..."
 
     Invoke-Reboot
-
-}
-
-
-# Script 3
-if (-not (Test-Path $Script3Flag)) {
-    
-    Start-Process "powershell.exe" -ArgumentList "-ExecutionPolicy Bypass -NoProfile -File `"$workDir\3_LumiComputerSetup-AfterInstallingOS.ps1`"" -Verb RunAs -Wait
-    New-Item -ItemType File -Path "$workDir\Script3.flag" | Out-Null
 
 }
 
@@ -100,13 +88,14 @@ if (-not (Test-Path $SQLFlag)) {
 
 }
 
-# Script 4
-if (-not (Test-Path $Script4Flag)) {
+# Script 347
+if (-not (Test-Path $Script2Flag)) {
     
-    Start-Process "powershell.exe" -ArgumentList "-ExecutionPolicy Bypass -NoProfile -File `"$workDir\4_LumiComputerSetup-AfterInstallingSqlExpress.ps1`"" -Verb RunAs -Wait
-    New-Item -ItemType File -Path "$workDir\Script4.flag" | Out-Null
+    Start-Process "powershell.exe" -ArgumentList "-ExecutionPolicy Bypass -NoProfile -File `"$workDir\2_LumiComputerSetup-AfterInstallingSQL.ps1`"" -Verb RunAs -Wait
+    New-Item -ItemType File -Path "$workDir\Script3.flag" | Out-Null
 
 }
+
 
 # Office Install
 if (-not (Test-Path $OfficeFlag)) {
@@ -120,22 +109,14 @@ if (-not (Test-Path $OfficeFlag)) {
 # # Run Windows Updates
 # Install-WindowsUpdate -AcceptEula
 
-# # Script 6
-# if (-not (Test-Path $Script6Flag)) {
+# Script 3
+if (-not (Test-Path $Script3Flag)) {
     
-#     Start-Process "powershell.exe" -ArgumentList "-ExecutionPolicy Bypass -NoProfile -File `"$workDir\6_LumiComputerSetup-AfterInstallingWindowsUpdates.ps1`"" -Verb RunAs -Wait
-#     New-Item -ItemType File -Path "$workDir\Script6.flag" | Out-Null
+    Start-Process "powershell.exe" -ArgumentList "-ExecutionPolicy Bypass -NoProfile -File `"$workDir\3_LumiComputerSetup-FinalSteps.ps1`"" -Verb RunAs -Wait
+    New-Item -ItemType File -Path "$workDir\Script6.flag" | Out-Null
 
-# }
+}
 
-# # Script 7
-
-# if (-not (Test-Path $Script7Flag)) {
-    
-#     Start-Process "powershell.exe" -ArgumentList "-ExecutionPolicy Bypass -NoProfile -File `"$workDir\Fix LumiAGM log and addin file permissions.ps1`"" -Verb RunAs -Wait
-#     New-Item -ItemType File -Path "$workDir\Script7.flag" | Out-Null
-
-# }
 
 
 $selectedApps = $configJSON.SelectedApplications
