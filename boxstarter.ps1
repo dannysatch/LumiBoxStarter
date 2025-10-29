@@ -10,6 +10,9 @@ $Script3Flag = Join-Path $workDir "Script3.flag"
 $SQLFlag =  Join-Path $workDir "SQL.flag"
 $ConfigFlag = Join-Path $workDir "config.flag"
 
+
+## Download Set Up Files
+
 # Ensure the lib folder exists
 if (-not (Test-Path $workDir)) {
     New-Item -Path $workDir -ItemType Directory -Force | Out-Null
@@ -33,6 +36,7 @@ if (-not (Test-Path $DownloadFlag)) {
 
 }
 
+## Run Lumi Set Up Scripts
 
 # Script 0 (Set ExecutionPolicy)
 if (-not (Test-Path $Script0Flag)) {
@@ -88,7 +92,7 @@ if (-not (Test-Path $SQLFlag)) {
 
 }
 
-# Script 347
+# Script 2
 if (-not (Test-Path $Script2Flag)) {
     
     Start-Process "powershell.exe" -ArgumentList "-ExecutionPolicy Bypass -NoProfile -File `"$workDir\2_LumiComputerSetup-AfterInstallingSQL.ps1`"" -Verb RunAs -Wait
@@ -118,6 +122,7 @@ if (-not (Test-Path $Script3Flag)) {
 }
 
 
+## Install Lumi Software
 
 $selectedApps = $configJSON.SelectedApplications
 
