@@ -67,7 +67,7 @@ if (-not (Test-Path $Script0Flag)) {
     
     Start-Process "powershell.exe" -ArgumentList "-ExecutionPolicy Bypass -NoProfile -File `"$workDir\1_LumiComputerSetup-AfterInstallingOS.ps1`"" -Verb RunAs -Wait
 
-    New-Item -ItemType File -Path "$workDir\Script2.flag" | Out-Null
+    New-Item -ItemType File -Path "$workDir\Script1.flag" | Out-Null
 
     Write-Host "`n Rebooting to continue setup..."
 
@@ -96,7 +96,7 @@ if (-not (Test-Path $SQLFlag)) {
 if (-not (Test-Path $Script2Flag)) {
     
     Start-Process "powershell.exe" -ArgumentList "-ExecutionPolicy Bypass -NoProfile -File `"$workDir\2_LumiComputerSetup-AfterInstallingSQL.ps1`"" -Verb RunAs -Wait
-    New-Item -ItemType File -Path "$workDir\Script3.flag" | Out-Null
+    New-Item -ItemType File -Path "$workDir\Script2.flag" | Out-Null
 
 }
 
@@ -117,7 +117,7 @@ if (-not (Test-Path $OfficeFlag)) {
 if (-not (Test-Path $Script3Flag)) {
     
     Start-Process "powershell.exe" -ArgumentList "-ExecutionPolicy Bypass -NoProfile -File `"$workDir\3_LumiComputerSetup-FinalSteps.ps1`"" -Verb RunAs -Wait
-    New-Item -ItemType File -Path "$workDir\Script6.flag" | Out-Null
+    New-Item -ItemType File -Path "$workDir\Script3.flag" | Out-Null
 
 }
 
