@@ -10,7 +10,7 @@ $packageRoot = Join-Path $workDir 'boxstarter'
 $zipUrl      = 'https://boxstarterlumi.blob.core.windows.net/installers/boxstarter.zip'
 
 $zipFilePath    = Join-Path $workDir 'boxstarter.zip'
-$userSelections = Join-Path $packageRoot 'UserSelections.json'
+$userSelections = Join-Path $workDir 'UserSelections.json'
 
 # --- Flag files stay in C:\LumiSetup ---
 $DownloadFlag = Join-Path $workDir 'Download.flag'
