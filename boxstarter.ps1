@@ -1,5 +1,5 @@
 # =========================
-# Lumi Setup - corrected for /boxstarter folder
+# Lumi Setup - corrected for /boxstarter folder (with tweaks applied)
 # =========================
 
 $ErrorActionPreference = 'Stop'
@@ -45,20 +45,25 @@ function Assert-FileExists($Path) {
 # -------------------------
 # Ensure work folder exists
 # -------------------------
-if (-not (Test-Path $workDir)) {
+if (-not (Test-Path -LiteralPath $workDir)) {
     New-Item -Path $workDir -ItemType Directory -Force | Out-Null
 }
 
 # -------------------------
 # Download + Extract
 # -------------------------
-if (-not (Test-Path $DownloadFlag)) {
+if (-not (Test-Path -LiteralPath $DownloadFlag)) {
 
     Invoke-WebRequest -Uri $zipUrl -OutFile $zipFilePath
 
     Expand-Archive -LiteralPath $zipFilePath -DestinationPath $workDir -Force
 
-    Remove-Item $zipFilePath -Force
+    Remove-Item -LiteralPath $zipFilePath -Force -ErrorAction SilentlyContinue
+
+    # Sanity-check extracted structure
+    if (-not (Test-Path -LiteralPath $packageRoot)) {
+        throw "Expected extracted folder not found: $packageRoot"
+    }
 
     New-FlagFile $DownloadFlag
 }
@@ -66,7 +71,7 @@ if (-not (Test-Path $DownloadFlag)) {
 # -------------------------
 # Script 0
 # -------------------------
-if (-not (Test-Path $Script0Flag)) {
+if (-not (Test-Path -LiteralPath $Script0Flag)) {
 
     Assert-FileExists $cmdAllowPowershell
 
@@ -80,7 +85,7 @@ if (-not (Test-Path $Script0Flag)) {
 # -------------------------
 # Config
 # -------------------------
-if (-not (Test-Path $ConfigFlag)) {
+if (-not (Test-Path -LiteralPath $ConfigFlag)) {
 
     Assert-FileExists $configStart
 
@@ -94,7 +99,7 @@ if (-not (Test-Path $ConfigFlag)) {
 # -------------------------
 # Script 1
 # -------------------------
-if (-not (Test-Path $Script1Flag)) {
+if (-not (Test-Path -LiteralPath $Script1Flag)) {
 
     Assert-FileExists $script1
 
@@ -109,7 +114,7 @@ if (-not (Test-Path $Script1Flag)) {
 # -------------------------
 # SQL
 # -------------------------
-if (-not (Test-Path $SQLFlag)) {
+if (-not (Test-Path -LiteralPath $SQLFlag)) {
 
     choco install sql-server-express -y
     choco install sql-server-management-studio -y
@@ -121,7 +126,7 @@ if (-not (Test-Path $SQLFlag)) {
 # -------------------------
 # Script 2
 # -------------------------
-if (-not (Test-Path $Script2Flag)) {
+if (-not (Test-Path -LiteralPath $Script2Flag)) {
 
     Assert-FileExists $script2
 
@@ -135,19 +140,20 @@ if (-not (Test-Path $Script2Flag)) {
 # -------------------------
 # Office
 # -------------------------
-if (-not (Test-Path $OfficeFlag)) {
+if (-not (Test-Path -LiteralPath $OfficeFlag)) {
 
     Assert-FileExists $officeConfigXml
 
-    New-FlagFile $OfficeFlag
-
+    # Install first; only mark completed when successful
     choco install office365business --params="'/configpath:$officeConfigXml'" -y
+
+    New-FlagFile $OfficeFlag
 }
 
 # -------------------------
 # Script 3
 # -------------------------
-if (-not (Test-Path $Script3Flag)) {
+if (-not (Test-Path -LiteralPath $Script3Flag)) {
 
     Assert-FileExists $script3
 
@@ -159,32 +165,49 @@ if (-not (Test-Path $Script3Flag)) {
 }
 
 # -------------------------
-# Load selections (NOW CORRECT ROOT)
+# Install Lumi Software (newer ZIP binaries, AGM Web Apps removed)
 # -------------------------
-Assert-FileExists $userSelections
-$configJSON = Get-Content $userSelections -Raw | ConvertFrom-Json
-$selectedApps = $configJSON.SelectedApplications
 
-function Install-App($id, $filename, $name) {
-    if ($selectedApps -contains $id) {
-        $path = Join-Path $installerRoot $filename
-        Assert-FileExists $path
-        Write-Host "Installing: $name" -ForegroundColor Green
-        Start-Process -Wait -FilePath $path -ArgumentList '/S'
+Assert-FileExists $userSelections
+$configJSON = Get-Content -LiteralPath $userSelections -Raw | ConvertFrom-Json
+
+$selectedApps = @($configJSON.SelectedApplications)
+
+function Is-Selected {
+    param([Parameter(Mandatory)][string]$Needle)
+
+    return [bool]($selectedApps | Where-Object { $_ -like "*$Needle*" } | Select-Object -First 1)
+}
+
+function Install-IfSelected {
+    param(
+        [Parameter(Mandatory)][string]$SelectionNeedle,
+        [Parameter(Mandatory)][string]$ExeFileName,
+        [Parameter(Mandatory)][string]$DisplayName
+    )
+
+    if (Is-Selected -Needle $SelectionNeedle) {
+        $exePath = Join-Path $installerRoot $ExeFileName
+        Assert-FileExists $exePath
+        Write-Host "Installing: $DisplayName" -ForegroundColor Green
+        Start-Process -Wait -FilePath $exePath -ArgumentList '/S' -PassThru | Out-Null
+    }
+    else {
+        Write-Host "Skipping (not selected): $DisplayName" -ForegroundColor DarkGray
     }
 }
 
-Install-App 1  'IML Communicator Hub Service Installer v1.40.0.0.exe' 'IML Communicator Hub'
-Install-App 2  'IML Connector System Installer v2.52.0.3.exe'         'IML Connector System'
-Install-App 3  'Lumi AGM Installer v28.0.0.1.exe'                     'Lumi AGM'
-Install-App 4  'Lumi AGM Reg and Vote Installer v3.10.0.0.exe'        'Lumi AGM Reg and Vote'
-Install-App 5  'Lumi AGM Studio Installer v28.0.0.0.exe'              'Lumi AGM Studio'
-Install-App 7  'Lumi Audience Display Installer v2.50.0.0.exe'        'Lumi Audience Display'
-Install-App 8  'Lumi Kiosk Browser Installer v28.0.0.0.exe'           'Lumi Kiosk Browser'
-Install-App 9  'Lumi Live DataBase Backup Installer v2.52.0.0.exe'    'Lumi Live Database Backup'
-Install-App 10 'Lumi Magma Hub Service Installer v1.6.0.0.exe'        'Lumi Magma Hub'
-Install-App 11 'Lumi ProjectorPowerPoint Installer v2.24.0.0.exe'     'Lumi Projector PowerPoint'
-Install-App 12 'Lumi Register Installer v2.42.0.0.exe'                 'Lumi Register'
-Install-App 13 'Lumi Signature Capture Installer v2.26.0.0.exe'       'Lumi Signature Capture'
+Install-IfSelected 'IML Communicator Hub Service Installer' 'IML Communicator Hub Service Installer v1.40.0.0.exe' 'IML Communicator Hub Service'
+Install-IfSelected 'IML Connector System Installer'         'IML Connector System Installer v2.52.0.3.exe'         'IML Connector System Installer'
+Install-IfSelected 'Lumi AGM Installer'                     'Lumi AGM Installer v28.0.0.1.exe'                     'Lumi AGM Installer'
+Install-IfSelected 'Lumi AGM Reg and Vote Installer'        'Lumi AGM Reg and Vote Installer v3.10.0.0.exe'        'Lumi AGM Reg and Vote Installer'
+Install-IfSelected 'Lumi AGM Studio Installer'              'Lumi AGM Studio Installer v28.0.0.0.exe'              'Lumi AGM Studio Installer'
+Install-IfSelected 'Lumi Audience Display Installer'        'Lumi Audience Display Installer v2.50.0.0.exe'        'Lumi Audience Display Installer'
+Install-IfSelected 'Lumi Kiosk Browser Installer'           'Lumi Kiosk Browser Installer v28.0.0.0.exe'           'Lumi Kiosk Browser Installer'
+Install-IfSelected 'Lumi Live DataBase Backup Installer'    'Lumi Live DataBase Backup Installer v2.52.0.0.exe'    'Lumi Live DataBase Backup Installer'
+Install-IfSelected 'Lumi Magma Hub Service Installer'       'Lumi Magma Hub Service Installer v1.6.0.0.exe'        'Lumi Magma Hub Service Installer'
+Install-IfSelected 'Lumi ProjectorPowerPoint Installer'     'Lumi ProjectorPowerPoint Installer v2.24.0.0.exe'     'Lumi ProjectorPowerPoint Installer'
+Install-IfSelected 'Lumi Register Installer'                'Lumi Register Installer v2.42.0.0.exe'                'Lumi Register Installer'
+Install-IfSelected 'Lumi Signature Capture Installer'       'Lumi Signature Capture Installer v2.26.0.0.exe'       'Lumi Signature Capture Installer'
 
-Remove-Item $userSelections -Force -ErrorAction SilentlyContinue
+Remove-Item -LiteralPath $userSelections -Force -ErrorAction SilentlyContinue
