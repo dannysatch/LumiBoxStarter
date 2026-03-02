@@ -1,4 +1,4 @@
-$workDir = "C:\LumiSetup\" 
+$workDir = "C:\LumiSetup" 
 $zipUrl = "https://boxstarterlumi.blob.core.windows.net/installers/boxstarter.zip"
 $zipFilePath = Join-Path $workDir "boxstarter.zip"
 
