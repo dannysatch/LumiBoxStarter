@@ -77,7 +77,7 @@ $configJSON = Get-Content -Path "$workDir\UserSelections.json" -Raw | ConvertFro
 if (-not (Test-Path $SQLFlag)) {
     
     # Install SQL Server
-    choco install sql-server-express --version=16.0.1000.6 -y
+    choco install sql-server-express
 
     # Install SSMS
     choco install sql-server-management-studio
