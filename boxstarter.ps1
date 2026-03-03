@@ -125,6 +125,7 @@ if (-not (Test-Path -LiteralPath $SQLFlag)) {
     choco install tightvnc -y
     choco install notepadplusplus.install -y
     choco install 7zip.install -y
+    choco install dotnet3.5 -y
 
     New-FlagFile $SQLFlag
     Invoke-Reboot
