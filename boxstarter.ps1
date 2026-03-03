@@ -119,6 +119,13 @@ if (-not (Test-Path -LiteralPath $SQLFlag)) {
     choco install sql-server-express -y
     choco install sql-server-management-studio -y
 
+    #####UK Software Requests
+    choco install googlechrome -y
+    choco install zoom -y
+    choco install tightvnc -y
+    choco install notepadplusplus.install -y
+    choco install 7zip.install -y
+
     New-FlagFile $SQLFlag
     Invoke-Reboot
 }
