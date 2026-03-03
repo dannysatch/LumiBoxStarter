@@ -192,7 +192,12 @@ function Install-IfSelected {
         [Parameter(Mandatory)][string]$ExeFileName,      # versioned exe in ZIP
         [Parameter(Mandatory)][string]$DisplayName
     )
-
+        # QUICK HOTFIX: never install Feedback Hub Service (even if selected/all)
+    if ($DisplayName -eq 'Lumi Feedback Hub Service Installer' -or
+        $ExeFileName -eq 'Lumi Feedback Hub Service Installer v1.16.0.0.exe') {
+        Write-Host "FORCED SKIP: $DisplayName" -ForegroundColor Yellow
+        return
+    }
     if (Is-Selected -Needle $SelectionNeedle) {
         $exePath = Join-Path $installerRoot $ExeFileName
         Assert-FileExists $exePath
