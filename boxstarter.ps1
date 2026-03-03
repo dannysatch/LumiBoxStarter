@@ -192,9 +192,12 @@ function Install-IfSelected {
         [Parameter(Mandatory)][string]$ExeFileName,      # versioned exe in ZIP
         [Parameter(Mandatory)][string]$DisplayName
     )
-        # QUICK HOTFIX: never install Feedback Hub Service (even if selected/all)
-    if ($DisplayName -eq 'Lumi Feedback Hub Service Installer' -or
-        $ExeFileName -eq 'Lumi Feedback Hub Service Installer v1.16.0.0.exe') {
+    # QUICK HOTFIX: never install these (even if selected/all)
+    if ($DisplayName -in @(
+        'Lumi Feedback Hub Service Installer',
+        'IML Communicator Hub Service Installer',
+        'Lumi Audience Display Installer'
+    )) {
         Write-Host "FORCED SKIP: $DisplayName" -ForegroundColor Yellow
         return
     }
