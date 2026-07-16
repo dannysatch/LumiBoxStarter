@@ -196,8 +196,7 @@ function Install-IfSelected {
     # QUICK HOTFIX: never install these (even if selected/all)
     if ($DisplayName -in @(
         'Lumi Feedback Hub Service Installer',
-        'IML Communicator Hub Service Installer',
-        'Lumi Audience Display Installer'
+        'IML Communicator Hub Service Installer'
     )) {
         Write-Host "FORCED SKIP: $DisplayName" -ForegroundColor Yellow
         return
