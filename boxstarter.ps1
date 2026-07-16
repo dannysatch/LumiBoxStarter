@@ -116,6 +116,13 @@ if (-not (Test-Path -LiteralPath $Script1Flag)) {
 # -------------------------
 if (-not (Test-Path -LiteralPath $SQLFlag)) {
 
+    Assert-FileExists $userSelections
+
+    $regionConfig = Get-Content `
+        -LiteralPath $userSelections `
+        -Raw |
+        ConvertFrom-Json
+
     choco install sql-server-express -y
     choco install sql-server-management-studio -y
 
@@ -126,6 +133,29 @@ if (-not (Test-Path -LiteralPath $SQLFlag)) {
     choco install notepadplusplus.install -y
     choco install 7zip.install -y
     choco install dotnet3.5 -y
+
+    ##### Canada Software Requests
+
+    if ($regionConfig.Region -eq 'ca') {
+        choco install onedrive -y
+        choco install microsoft-teams-new-bootstrapper -y
+
+        $ndiInstaller = Join-Path `
+        $installerRoot `
+        'NDI 6 Tools.exe'
+
+        Assert-FileExists $ndiInstaller
+
+        Start-Process `
+            -FilePath $ndiInstaller `
+            -ArgumentList @(
+                '/VERYSILENT',
+                '/SUPPRESSMSGBOXES',
+                '/NORESTART',
+                '/SP-'
+            ) `
+            -Wait
+    }
 
     New-FlagFile $SQLFlag
     Invoke-Reboot
