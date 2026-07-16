@@ -212,11 +212,113 @@ function Install-IfSelected {
     }
 }
 
+# -------------------------
+# Projector HTML prerequisites
+# -------------------------
+if (Is-Selected -Needle 'Lumi Projector HTML Installer (Grid View)') {
+    Write-Host 'Checking IIS for Projector HTML...' `
+        -ForegroundColor Cyan
+
+    $iisFeatures = @(
+        'IIS-WebServerRole',
+        'IIS-WebServer',
+        'IIS-CommonHttpFeatures',
+        'IIS-StaticContent',
+        'IIS-DefaultDocument',
+        'IIS-ManagementConsole'
+    )
+
+    $restartRequired = $false
+
+    foreach ($feature in $iisFeatures) {
+        $currentFeature = Get-WindowsOptionalFeature `
+            -Online `
+            -FeatureName $feature `
+            -ErrorAction Stop
+
+        if ($currentFeature.State -ne 'Enabled') {
+            Write-Host "Enabling IIS feature: $feature"
+
+            $result = Enable-WindowsOptionalFeature `
+                -Online `
+                -FeatureName $feature `
+                -All `
+                -NoRestart `
+                -ErrorAction Stop
+
+            if ($result.RestartNeeded) {
+                $restartRequired = $true
+            }
+        }
+    }
+
+    if ($restartRequired) {
+        Write-Host 'IIS requires a reboot before Projector HTML installation.' `
+            -ForegroundColor Yellow
+
+        Invoke-Reboot
+    }
+
+    foreach ($feature in $iisFeatures) {
+        $state = Get-WindowsOptionalFeature `
+            -Online `
+            -FeatureName $feature `
+            -ErrorAction Stop
+
+        if ($state.State -ne 'Enabled') {
+            throw "Required IIS feature is not enabled: $feature"
+        }
+    }
+
+    Write-Host 'Required IIS features are enabled.' `
+        -ForegroundColor Green
+}
+
 # ---- Names must match configStart.ps1 list (no versions) ----
 Install-IfSelected 'IML Click System Installer'                 'IML Click System Installer v2.50.0.1.exe'                 'IML Click System Installer'
 Install-IfSelected 'IML Communicator Hub Service Installer'     'IML Communicator Hub Service Installer v1.40.0.0.exe'     'IML Communicator Hub Service Installer'
 Install-IfSelected 'IML Connector Configuration Tool Installer' 'IML Connector Configuration Tool Installer v3.52.0.0.exe' 'IML Connector Configuration Tool Installer'
+
 Install-IfSelected 'IML Connector Satellite Installer'          'IML Connector Satellite Installer v2.52.0.0.exe'          'IML Connector Satellite Installer'
+
+# Add required Connector Satellite firewall rules after installation
+if (Is-Selected -Needle 'IML Connector Satellite Installer') {
+    $satelliteExe = 'C:\Program Files (x86)\IML\ConnectorSatellite\IMLConnectorSatellite.exe'
+
+    Assert-FileExists $satelliteExe
+
+    # Remove previous versions of these rules to prevent duplicates
+    Get-NetFirewallRule `
+        -DisplayName 'IMLConnectorSatellite' `
+        -ErrorAction SilentlyContinue |
+        Remove-NetFirewallRule
+
+    New-NetFirewallRule `
+        -Name 'IMLConnectorSatellite-TCP' `
+        -DisplayName 'IMLConnectorSatellite' `
+        -Direction Inbound `
+        -Program $satelliteExe `
+        -Protocol TCP `
+        -Profile Private,Public `
+        -Action Allow `
+        -ErrorAction Stop |
+        Out-Null
+
+    New-NetFirewallRule `
+        -Name 'IMLConnectorSatellite-UDP' `
+        -DisplayName 'IMLConnectorSatellite' `
+        -Direction Inbound `
+        -Program $satelliteExe `
+        -Protocol UDP `
+        -Profile Private,Public `
+        -Action Allow `
+        -ErrorAction Stop |
+        Out-Null
+
+    Write-Host 'Connector Satellite TCP and UDP firewall rules created.' `
+        -ForegroundColor Green
+}
+
 Install-IfSelected 'IML Connector System Installer'             'IML Connector System Installer v2.52.0.3.exe'             'IML Connector System Installer'
 
 Install-IfSelected 'Lumi AGM Installer'                         'Lumi AGM Installer v28.0.0.1.exe'                         'Lumi AGM Installer'
@@ -233,5 +335,62 @@ Install-IfSelected 'Lumi Feedback Hub Service Installer'        'Lumi Feedback H
 Install-IfSelected 'Lumi Kiosk Browser Installer'               'Lumi Kiosk Browser Installer v28.0.0.0.exe'               'Lumi Kiosk Browser Installer'
 Install-IfSelected 'Lumi Magma Hub Service Installer'           'Lumi Magma Hub Service Installer v1.6.0.0.exe'            'Lumi Magma Hub Service Installer'
 Install-IfSelected 'Lumi Studio Installer'                      'Lumi Studio Installer v1.38.0.0.exe'                      'Lumi Studio Installer'
+Install-IfSelected 'Lumi Projector HTML Installer (Grid View)'  'Lumi Projector Html Installer v0.0.0.exe'                        'Lumi Projector HTML Installer (Grid View)'
+
+# -------------------------
+# Copy Connector firmware and updater to Lumi administrator desktop
+# -------------------------
+if (Is-Selected -Needle 'Connector Firmware and Updater Tool') {
+    $allowedUsers = @(
+        'LumiPcAdm',
+        'LumiSvrAdm'
+    )
+
+    if ($env:USERNAME -notin $allowedUsers) {
+        throw "Expected Boxstarter to run as LumiPcAdm or LumiSvrAdm, but current user is $env:USERNAME."
+    }
+
+    $sourceFolder = Join-Path `
+        $installerRoot `
+        'Connector Firmware and Updater Tool'
+
+    if (-not (Test-Path -LiteralPath $sourceFolder -PathType Container)) {
+        throw "Required folder not found: $sourceFolder"
+    }
+
+    $adminDesktop = [Environment]::GetFolderPath('Desktop')
+
+    if ([string]::IsNullOrWhiteSpace($adminDesktop)) {
+        throw "Could not resolve the desktop for $env:USERNAME."
+    }
+
+    $desktopFolder = Join-Path `
+        $adminDesktop `
+        'Connector Firmware and Updater Tool'
+
+    # Remove the previous managed copy to avoid retaining old firmware
+    if (Test-Path -LiteralPath $desktopFolder) {
+        Remove-Item `
+            -LiteralPath $desktopFolder `
+            -Recurse `
+            -Force `
+            -ErrorAction Stop
+    }
+
+    Copy-Item `
+        -LiteralPath $sourceFolder `
+        -Destination $desktopFolder `
+        -Recurse `
+        -Force `
+        -ErrorAction Stop
+
+    if (-not (Test-Path -LiteralPath $desktopFolder -PathType Container)) {
+        throw "Connector Firmware and Updater Tool was not copied to the desktop."
+    }
+
+    Write-Host `
+        "Connector Firmware and Updater Tool copied to the desktop for $env:USERNAME." `
+        -ForegroundColor Green
+}
 
 Remove-Item -LiteralPath $userSelections -Force -ErrorAction SilentlyContinue
