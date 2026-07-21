@@ -134,29 +134,6 @@ if (-not (Test-Path -LiteralPath $SQLFlag)) {
     choco install 7zip.install -y
     choco install dotnet3.5 -y
 
-    ##### Canada Software Requests
-
-    if ($regionConfig.Region -eq 'ca') {
-        choco install onedrive -y
-        choco install microsoft-teams-new-bootstrapper -y
-
-        $ndiInstaller = Join-Path `
-        $installerRoot `
-        'NDI 6 Tools.exe'
-
-        Assert-FileExists $ndiInstaller
-
-        Start-Process `
-            -FilePath $ndiInstaller `
-            -ArgumentList @(
-                '/VERYSILENT',
-                '/SUPPRESSMSGBOXES',
-                '/NORESTART',
-                '/SP-'
-            ) `
-            -Wait
-    }
-
     New-FlagFile $SQLFlag
     Invoke-Reboot
 }
@@ -422,5 +399,28 @@ if (Is-Selected -Needle 'Connector Firmware and Updater Tool') {
         "Connector Firmware and Updater Tool copied to the desktop for $env:USERNAME." `
         -ForegroundColor Green
 }
+
+ ##### Canada Software Requests
+
+    if ($regionConfig.Region -eq 'ca') {
+        choco install onedrive -y
+        choco install microsoft-teams-new-bootstrapper -y
+
+        $ndiInstaller = Join-Path `
+        $installerRoot `
+        'NDI 6 Tools.exe'
+
+        Assert-FileExists $ndiInstaller
+
+        Start-Process `
+            -FilePath $ndiInstaller `
+            -ArgumentList @(
+                '/VERYSILENT',
+                '/SUPPRESSMSGBOXES',
+                '/NORESTART',
+                '/SP-'
+            ) `
+            -Wait
+    }
 
 Remove-Item -LiteralPath $userSelections -Force -ErrorAction SilentlyContinue
