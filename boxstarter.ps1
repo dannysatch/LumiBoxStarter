@@ -286,48 +286,6 @@ Install-IfSelected 'IML Click System Installer'                 'IML Click Syste
 Install-IfSelected 'IML Communicator Hub Service Installer'     'IML Communicator Hub Service Installer v1.40.0.0.exe'     'IML Communicator Hub Service Installer'
 Install-IfSelected 'IML Connector Configuration Tool Installer' 'IML Connector Configuration Tool Installer v3.52.0.0.exe' 'IML Connector Configuration Tool Installer'
 
-Install-IfSelected 'IML Connector Satellite Installer'          'IML Connector Satellite Installer v2.52.0.0.exe'          'IML Connector Satellite Installer'
-
-# Add required Connector Satellite firewall rules after installation
-if (Is-Selected -Needle 'IML Connector Satellite Installer') {
-    $satelliteExe = 'C:\Program Files (x86)\IML\ConnectorSatellite\IMLConnectorSatellite.exe'
-
-    Assert-FileExists $satelliteExe
-
-    # Remove previous versions of these rules to prevent duplicates
-    Get-NetFirewallRule `
-        -DisplayName 'IMLConnectorSatellite' `
-        -ErrorAction SilentlyContinue |
-        Remove-NetFirewallRule
-
-    New-NetFirewallRule `
-        -Name 'IMLConnectorSatellite-TCP' `
-        -DisplayName 'IMLConnectorSatellite' `
-        -Direction Inbound `
-        -Program $satelliteExe `
-        -Protocol TCP `
-        -Profile Private,Public `
-        -Action Allow `
-        -ErrorAction Stop |
-        Out-Null
-
-    New-NetFirewallRule `
-        -Name 'IMLConnectorSatellite-UDP' `
-        -DisplayName 'IMLConnectorSatellite' `
-        -Direction Inbound `
-        -Program $satelliteExe `
-        -Protocol UDP `
-        -Profile Private,Public `
-        -Action Allow `
-        -ErrorAction Stop |
-        Out-Null
-
-    Write-Host 'Connector Satellite TCP and UDP firewall rules created.' `
-        -ForegroundColor Green
-}
-
-Install-IfSelected 'IML Connector System Installer'             'IML Connector System Installer v2.52.0.3.exe'             'IML Connector System Installer'
-
 Install-IfSelected 'Lumi AGM Installer'                         'Lumi AGM Installer v28.0.0.1.exe'                         'Lumi AGM Installer'
 Install-IfSelected 'Lumi AGM Reg and Vote Installer'            'Lumi AGM Reg and Vote Installer v3.10.0.0.exe'            'Lumi AGM Reg and Vote Installer'
 Install-IfSelected 'Lumi AGM Studio Installer'                  'Lumi AGM Studio Installer v28.0.0.0.exe'                  'Lumi AGM Studio Installer'
@@ -397,6 +355,48 @@ if (Is-Selected -Needle 'Connector Firmware and Updater Tool') {
 
     Write-Host `
         "Connector Firmware and Updater Tool copied to the desktop for $env:USERNAME." `
+        -ForegroundColor Green
+}
+
+Install-IfSelected 'IML Connector System Installer'             'IML Connector System Installer v2.52.0.3.exe'             'IML Connector System Installer'
+
+Install-IfSelected 'IML Connector Satellite Installer'          'IML Connector Satellite Installer v2.52.0.0.exe'          'IML Connector Satellite Installer'
+
+# Add required Connector Satellite firewall rules after installation
+if (Is-Selected -Needle 'IML Connector Satellite Installer') {
+    $satelliteExe = 'C:\Program Files (x86)\IML\ConnectorSatellite\IMLConnectorSatellite.exe'
+
+    Assert-FileExists $satelliteExe
+
+    # Remove previous versions of these rules to prevent duplicates
+    Get-NetFirewallRule `
+        -DisplayName 'IMLConnectorSatellite' `
+        -ErrorAction SilentlyContinue |
+        Remove-NetFirewallRule
+
+    New-NetFirewallRule `
+        -Name 'IMLConnectorSatellite-TCP' `
+        -DisplayName 'IMLConnectorSatellite' `
+        -Direction Inbound `
+        -Program $satelliteExe `
+        -Protocol TCP `
+        -Profile Private,Public `
+        -Action Allow `
+        -ErrorAction Stop |
+        Out-Null
+
+    New-NetFirewallRule `
+        -Name 'IMLConnectorSatellite-UDP' `
+        -DisplayName 'IMLConnectorSatellite' `
+        -Direction Inbound `
+        -Program $satelliteExe `
+        -Protocol UDP `
+        -Profile Private,Public `
+        -Action Allow `
+        -ErrorAction Stop |
+        Out-Null
+
+    Write-Host 'Connector Satellite TCP and UDP firewall rules created.' `
         -ForegroundColor Green
 }
 
