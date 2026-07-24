@@ -360,7 +360,7 @@ if (Is-Selected -Needle 'Connector Firmware and Updater Tool') {
 
 Install-IfSelected 'IML Connector System Installer'             'IML Connector System Installer v2.52.0.3.exe'             'IML Connector System Installer'
 
-Install-IfSelected 'IML Connector Satellite Installer'          'IML Connector Satellite Installer v2.52.0.0.exe'          'IML Connector Satellite Installer'
+Install-IfSelected 'IML Connector Satellite Installer'          'IML Connector Satellite Installer v2.50.0.0.exe'          'IML Connector Satellite Installer'
 
 # Add required Connector Satellite firewall rules after installation
 if (Is-Selected -Needle 'IML Connector Satellite Installer') {
